@@ -25,15 +25,44 @@ $ spec link project namespace/projectName .
 ### Create a new Live Object
 [Reference](https://github.com/spec-dev/allo/blob/master/guides/Writing-Live-Objects.md)
 
+### Editing a Live Object
+1. Edit the Live Object code.
+2. Bump the version of the Live Object in your `mainfest.json` file.
+3. Publish the Live Object to spec.
+```bash
+# The --open flag will open the Live Object in your browser after it's published.
+spec publish LiveObject --open
+```
+4. Update the Live Object in your `project.toml` file.
+5. Data will be migrated automatically.
+
 ### Add a contract group to spec ecosystem
 ```bash
 $ spec add contract group
 ```
 
 ### Add a contract to a contract group
-```bash
-$ spec add contract
+Typically, I would say use the spec add contracts command, but since I ended up swapping that out for spec sync contracts, the easiest way to "add" a contract to a factory group for now will be to just do something like:
+
+1. Change your contract group inside `contracts.spec.json` to look something like this (i.e. give it the address you wanna add)
+
+```javascript
+{
+    "name": "SQFSuperFluidStrategy",
+    "isFactoryGroup": true,
+    "contracts": [
+    {
+        "chainId": 5,
+        "address": "0xabc123..."
+    }
+    ]
+}
 ```
+2. Then run the sync command
+```bash
+$ spec sync contracts
+```
+3. Now remove the `"contracts": [...]` key/value pair from that group inside contracts.spec.json (i.e. undo step 1)
 
 ### Adding a new migration
 ```bash
@@ -64,6 +93,11 @@ $ spec run graphql
 ```
 
 ### Run tests
+```bash
+spec test LiveObject
+```
+
+
 [Reference](https://github.com/spec-dev/allo/blob/master/guides/Testing-Live-Objects.md)
 
 ### Tailing contract events
